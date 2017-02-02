@@ -1,0 +1,29 @@
+#body{
+	font-size: 250%;
+	text-align: center;
+}
+
+.form-control{
+	font-size: 20px;
+	width: 20%;
+}
+
+#header,#alldata{
+	text-align: center;
+}
+.col-lg-6 {
+	margin-left: 25%;
+	margin-right: 25%;
+}
+.table tbody > tr {
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+th,td,.table p{
+	text-align: center;
+}
+#table1,#table2{
+	margin-right: auto;
+	margin-left: auto;
+}
