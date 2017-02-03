@@ -1,20 +1,83 @@
+var count=0;
+var data1 =[];
+
+$scrollfun = function(data){
+	     
+	for (j = i; i < j + 24; i++) {
+		$('#content').append('\
+			<tr class="set"><td class="id">'+data[i].id+'</td>\
+		    <td class="name">'+data[i].name+'</td>\
+		    <td class="gender">'+data[i].gender+'</td>\
+		    <td class="company">'+data[i].company+'</td>\
+		    <td class="email">'+data[i].email+'</td>\
+		    <td class="phone">'+data[i].phone+'</td>\
+		    <td><button class="editbtn">Edit</button>\
+		    </td>\
+		    </tr>\
+		');
+	} 
+}
+
 $tablefun = function(item)
 {
  $('#content').append('\
-	        						<tr class="set"><td class="id">'+item.id+'</td>\
-	                                <td class="name">'+item.name+'</td>\
-	                                <td class="gender">'+item.gender+'</td>\
-	                                <td class="company">'+item.company+'</td>\
-	                                <td class="email">'+item.email+'</td>\
-	                                <td class="phone">'+item.phone+'</td>\
-	                                <td><button class="editbtn">Edit</button>\
-	                                </td>\
-	                                </tr>\
-	                            	');
+	<tr class="set"><td class="id">'+item.id+'</td>\
+    <td class="name">'+item.name+'</td>\
+    <td class="gender">'+item.gender+'</td>\
+    <td class="company">'+item.company+'</td>\
+    <td class="email">'+item.email+'</td>\
+    <td class="phone">'+item.phone+'</td>\
+    <td><button class="editbtn">Edit</button>\
+    </td>\
+    </tr>\
+	');
 }
+
+$crudfun = function(data)
+{
+	$('#content').html('\
+	<tr><td><input type="text" class="id" value="'+data.id+'"></td>\
+    <td><input type="text" class="name" value="'+data.name+'"></td>\
+    <td><input type="text" class="gender" value="'+data.gender+'"></td>\
+    <td><input type="text" class="company" value="'+data.company+'"></td>\
+    <td><input type="text" class="email" value="'+data.email+'"></td>\
+    <td><input type="text" class="phone" value="'+data.phone+'"></td>\
+    <td><button class="updatebtn">Update</button>\
+    <td><button class="deletebtn">Delete</button>\
+    <td><button class="refreshbtn">Refresh</button>\
+    </td>\
+    </tr>\
+   	');
+
+}
+
+$ajax12 = function(link){
+	$.ajax({
+
+        type: 'GET',
+        url: link,
+
+        success: function(link) {
+            if (count === 0) {
+                $.each(link,function (index,item) {
+                    $tablefun(item);
+                    count++;
+                });
+            }
+        }
+    });
+}
+
+$(window).scroll(function() {
+    if ($(document).height() - $(window).height() == $(window).scrollTop()) {
+
+      $scrollfun(data1);
+    }
+
+  });
+
 $(function(){
-    var count=0;
-    var flag = 0;
+    
 	var tbody1 = $('#content');
     tbody1.html('');
 
@@ -22,40 +85,21 @@ $(function(){
 
 	$('#search').on('click', function(e) {
 		e.preventDefault();
-            flag = 0;
+		    var link;
+            
 	        var linkInput = $('#input1').val();
-	        var link = 'http://localhost:3000/people/?name=' + linkInput;
 
+	        link = 'http://localhost:3000/people/?name=' + linkInput;
+            $ajax12(link);
 
-	        $.ajax({
+            link = 'http://localhost:3000/people/?id=' + linkInput;
+            $ajax12(link);
 
-	            type: 'GET',
-	            url: link,
+            link = 'http://localhost:3000/people/?gender=' + linkInput;
+            $ajax12(link);
 
-	            success: function(link) {
-	                if (count === 0) {
-
-	                        $.each(link,function (index,item) {
-	              //           	tbody1.append('\
-	        						// <tr class="set"><td class="id">'+item.id+'</td>\
-	              //                   <td class="name">'+item.name+'</td>\
-	              //                   <td class="gender">'+item.gender+'</td>\
-	              //                   <td class="company">'+item.company+'</td>\
-	              //                   <td class="email">'+item.email+'</td>\
-	              //                   <td class="phone">'+item.phone+'</td>\
-	              //                   <td><button class="editbtn">Edit</button>\
-	              //                   </td>\
-	              //                   </tr>\
-	              //               	');
-	              $tablefun(item);
-	                            count++;
-
-	                        });
-	                }
-	            }
-
-	        });
-
+            link = 'http://localhost:3000/people/?company=' + linkInput;
+            $ajax12(link);  	        
 
 	    });
 
@@ -63,6 +107,12 @@ $(function(){
 	   $('#input1').on('click', function() {
 	        $('#content').empty();
 	        $('#input1').val("");
+	        $('#inputId').val("");
+	        $('#inputName').val("");
+	        $('#inputGender').val("");
+	        $('#inputCompany').val("");
+	        $('#inputEmail').val("");
+	        $('#inputPhone').val("");
 	        count = 0;
 	    });
 
@@ -79,33 +129,18 @@ $(function(){
 
 		$('#show').on('click', function(e) {
 		e.preventDefault();
-            flag = 1;
+            
 	        var link = 'http://localhost:3000/people';
-
 
 	        $.ajax({
 
 	            type: 'GET',
 	            url: link,
 
-	            success: function(link) {
+	            success: function(data) {
 	                if (count === 0) {
-
-	                        $.each(link,function (index,item) {
-	                        	tbody1.append('\
-	        						<tr class="set"><td class="id">'+item.id+'</td>\
-	                                <td class="name">'+item.name+'</td>\
-	                                <td class="gender">'+item.gender+'</td>\
-	                                <td class="company">'+item.company+'</td>\
-	                                <td class="email">'+item.email+'</td>\
-	                                <td class="phone">'+item.phone+'</td>\
-	                                <td><button class="editbtn">Edit</button>\
-	                                </td>\
-	                                </tr>\
-	                            	');
-	                            count++;
-
-	                        });
+	                        data1=data;
+				             $scrollfun(data1);
 	                }
 	            }
 
@@ -143,18 +178,12 @@ $(function(){
 				data:employee,
 
 				success:function(Addemployee){
-					tbody1.append('\
-	        						<tr class="set"><td class="id">'+Addemployee.id+'</td>\
-	                                <td class="name">'+Addemployee.name+'</td>\
-	                                <td class="gender">'+Addemployee.gender+'</td>\
-	                                <td class="company">'+Addemployee.company+'</td>\
-	                                <td class="email">'+Addemployee.email+'</td>\
-	                                <td class="phone">'+Addemployee.phone+'</td>\
-	                                <td><button class="editbtn">Edit</button>\
-	                                </td>\
-	                                </tr>\
-	                            	');
-					          $('#show').click();
+					       $tablefun(Addemployee);
+					       setTimeout(
+								  function() 
+								  {
+								    location.reload();//do something special
+								  }, 5000);			         
 				}
 
 			});
@@ -203,24 +232,9 @@ $(function(){
 		url:'http://localhost:3000/people/'+id,
 		data: edited,
 		success:function(data){
-			                   
-			                 tbody1.html('\
-	        						<tr><td><input type="text" class="id" value="'+data.id+'"></td>\
-	                                <td><input type="text" class="name" value="'+data.name+'"></td>\
-	                                <td><input type="text" class="gender" value="'+data.gender+'"></td>\
-	                                <td><input type="text" class="company" value="'+data.company+'"></td>\
-	                                <td><input type="text" class="email" value="'+data.email+'"></td>\
-	                                <td><input type="text" class="phone" value="'+data.phone+'"></td>\
-	                                <td><button class="updatebtn">Update</button>\
-	                                <td><button class="deletebtn">Delete</button>\
-	                                <td><button class="refreshbtn">Refresh</button>\
-	                                </td>\
-	                                </tr>\
-	                            	');
-			
-							}
-
-         				});
+			  $crudfun(data);	
+		  }
+         });
 
         });
 
@@ -243,22 +257,20 @@ $(function(){
 		
 		success:function(){
 			                   
-			                 tbody1.html('\
-	        						<tr><td><input type="text" class="id" value="'+id+'"></td>\
-	                                <td><input type="text" class="name" value="'+name+'"></td>\
-	                                <td><input type="text" class="gender" value="'+gender+'"></td>\
-	                                <td><input type="text" class="company" value="'+company+'"></td>\
-	                                <td><input type="text" class="email" value="'+email+'"></td>\
-	                                <td><input type="text" class="phone" value="'+phone+'"></td>\
-	                                <td><button class="updatebtn">Update</button>\
-	                                <td><button class="deletebtn">Delete</button>\
-	                                <td><button class="refreshbtn">Refresh</button>\
-	                                </td>\
-	                                </tr>\
-	                            	');
-
-			
-		}
+		    tbody1.html('\
+	    		<tr><td><input type="text" class="id" value="'+id+'"></td>\
+	            <td><input type="text" class="name" value="'+name+'"></td>\
+	            <td><input type="text" class="gender" value="'+gender+'"></td>\
+	            <td><input type="text" class="company" value="'+company+'"></td>\
+	            <td><input type="text" class="email" value="'+email+'"></td>\
+	            <td><input type="text" class="phone" value="'+phone+'"></td>\
+	            <td><button class="updatebtn">Update</button>\
+	            <td><button class="deletebtn">Delete</button>\
+	            <td><button class="refreshbtn">Refresh</button>\
+	            </td>\
+	            </tr>\
+	           	');			
+			}
 
          });
 
@@ -267,11 +279,6 @@ $(function(){
         $('#table2').on('click','.refreshbtn',function() {
 		
          location.reload();
-         /*setTimeout(
-			  function() 
-			  {
-			    $('#show').click();
-			  }, 5000);*/
 
 	    });
 
